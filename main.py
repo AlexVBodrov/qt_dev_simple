@@ -36,7 +36,6 @@ def application():
     btn.clicked.connect(add_label)
     
     
-    
     # Показываем(рисуем окно) window
     window.show()
     # Закрываем приложение

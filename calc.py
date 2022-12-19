@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5.QtWidgets import QMessageBox
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -215,22 +215,30 @@ class Ui_MainWindow(object):
         else:
             self.main_text_label.setText(self.main_text_label.text() + number)
     
-    def get_result(self):
-        
+    def show_result(self):
         try:
             expression = self.main_text_label.text()
             res = eval(expression)
             input_res = f'Результат: {res}'
             self.main_text_label.setText(input_res)
+            self.is_equal = True
         except Exception as e:
             self.main_text_label.setText('Error')
-            print(e)
+            error = QMessageBox()
+            error.setWindowTitle("Ошибка")
+            if isinstance(e, ZeroDivisionError):
+                error.setText(f'На ноль делить нельзя')
+            else:
+                error.setText(f'Нет одного аргумента. Ошибка ВВОДА выражения')
+            error.setIcon(QMessageBox.Warning)
+            error.setStandardButtons(QMessageBox.Ok|QMessageBox.Cancel)
+            error.setDetailedText(f'{e, type(e)}')
+            
+            error.buttonClicked.connect(self.clear_popup_action)
+            
+            error.exec_()
 
-        self.is_equal = True
-        
-        
-        
-    
+
     def add_functionc(self):
         self.pushButton_0.clicked.connect(lambda: self.write_number(self.pushButton_0.text()))
         self.pushButton_1.clicked.connect(lambda: self.write_number(self.pushButton_1.text()))
@@ -247,7 +255,12 @@ class Ui_MainWindow(object):
         self.pushButton_multiplies.clicked.connect(lambda: self.write_number(self.pushButton_multiplies.text()))
         self.pushButton_divide.clicked.connect(lambda: self.write_number(self.pushButton_divide.text()))
         
-        self.pushButton_equal.clicked.connect(self.get_result)
+        self.pushButton_equal.clicked.connect(self.show_result)
+    
+    def clear_popup_action(self, button):
+        self.main_text_label.setText("0")
+        self.is_equal = False
+            
     
 
 if __name__ == "__main__":

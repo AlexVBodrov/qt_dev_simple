@@ -9,13 +9,13 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(401, 442)
-        MainWindow.setMinimumSize(QtCore.QSize(400, 442))
+        MainWindow.resize(401, 466)
+        MainWindow.setMinimumSize(QtCore.QSize(400, 400))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.main_text_label = QtWidgets.QLabel(self.centralwidget)
@@ -171,33 +171,28 @@ class Ui_MainWindow(object):
         self.pushButton_divide.setFont(font)
         self.pushButton_divide.setStyleSheet("background-color: qlineargradient(spread:repeat, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(55, 131, 0, 255), stop:1 rgba(255, 255, 255, 255));")
         self.pushButton_divide.setObjectName("pushButton_divide")
-        self.pushButton_clear = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_clear.setGeometry(QtCore.QRect(0, 390, 401, 51))
+        self.pushButton_equal_2 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_equal_2.setGeometry(QtCore.QRect(0, 390, 399, 51))
         font = QtGui.QFont()
         font.setPointSize(25)
         font.setBold(True)
         font.setWeight(75)
-        self.pushButton_clear.setFont(font)
-        self.pushButton_clear.setStyleSheet("background-color: qlineargradient(spread:repeat, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 15, 0, 255), stop:1 rgba(255, 255, 255, 255));")
-        self.pushButton_clear.setObjectName("pushButton_clear")
-        
+        self.pushButton_equal_2.setFont(font)
+        self.pushButton_equal_2.setStyleSheet("background-color: qlineargradient(spread:repeat, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 15, 0, 255), stop:1 rgba(255, 255, 255, 255));")
+        self.pushButton_equal_2.setObjectName("pushButton_equal_2")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 400, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 401, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        
-        self.add_functionc()
 
-        self.is_equal = False
-        
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Калькулятор"))
-        self.main_text_label.setText(_translate("MainWindow", "0"))
+        self.main_text_label.setText(_translate("MainWindow", "TextLabel"))
         self.pushButton_7.setText(_translate("MainWindow", "7"))
         self.pushButton_8.setText(_translate("MainWindow", "8"))
         self.pushButton_9.setText(_translate("MainWindow", "9"))
@@ -208,73 +203,13 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(_translate("MainWindow", "2"))
         self.pushButton_3.setText(_translate("MainWindow", "3"))
         self.pushButton_0.setText(_translate("MainWindow", "0"))
-        
+        self.pushButton_equal.setText(_translate("MainWindow", "="))
         self.pushButton_plus.setText(_translate("MainWindow", "+"))
         self.pushButton_minus.setText(_translate("MainWindow", "-"))
         self.pushButton_multiplies.setText(_translate("MainWindow", "*"))
         self.pushButton_divide.setText(_translate("MainWindow", "/"))
-        
-        self.pushButton_equal.setText(_translate("MainWindow", "="))
-        
-        self.pushButton_clear.setText(_translate("MainWindow", "Очистить"))
+        self.pushButton_equal_2.setText(_translate("MainWindow", "Очистить"))
 
-
-    def write_number(self, number):
-        # print(number)
-        if self.main_text_label.text() == '0' or self.is_equal == True:
-            self.main_text_label.setText(number)
-            self.is_equal = False
-        else:
-            self.main_text_label.setText(self.main_text_label.text() + number)
-    
-    def show_result(self):
-        try:
-            expression = self.main_text_label.text()
-            res = eval(expression)
-            input_res = f'Результат: {res}'
-            self.main_text_label.setText(input_res)
-            self.is_equal = True
-        except Exception as e:
-            self.main_text_label.setText('Error')
-            error = QMessageBox()
-            error.setWindowTitle("Ошибка")
-            if isinstance(e, ZeroDivisionError):
-                error.setText(f'На ноль делить нельзя')
-            else:
-                error.setText(f'Нет одного аргумента. Ошибка ВВОДА выражения')
-            error.setIcon(QMessageBox.Warning)
-            error.setStandardButtons(QMessageBox.Ok|QMessageBox.Cancel)
-            error.setDetailedText(f'{e, type(e)}')
-            
-            error.buttonClicked.connect(self.clear_popup_action)
-            
-            error.exec_()
-
-
-    def add_functionc(self):
-        self.pushButton_0.clicked.connect(lambda: self.write_number(self.pushButton_0.text()))
-        self.pushButton_1.clicked.connect(lambda: self.write_number(self.pushButton_1.text()))
-        self.pushButton_2.clicked.connect(lambda: self.write_number(self.pushButton_2.text()))
-        self.pushButton_3.clicked.connect(lambda: self.write_number(self.pushButton_3.text()))
-        self.pushButton_4.clicked.connect(lambda: self.write_number(self.pushButton_4.text()))
-        self.pushButton_5.clicked.connect(lambda: self.write_number(self.pushButton_5.text()))
-        self.pushButton_6.clicked.connect(lambda: self.write_number(self.pushButton_6.text()))
-        self.pushButton_7.clicked.connect(lambda: self.write_number(self.pushButton_7.text()))
-        self.pushButton_8.clicked.connect(lambda: self.write_number(self.pushButton_8.text()))
-        self.pushButton_9.clicked.connect(lambda: self.write_number(self.pushButton_9.text()))
-        self.pushButton_plus.clicked.connect(lambda: self.write_number(self.pushButton_plus.text()))
-        self.pushButton_minus.clicked.connect(lambda: self.write_number(self.pushButton_minus.text()))
-        self.pushButton_multiplies.clicked.connect(lambda: self.write_number(self.pushButton_multiplies.text()))
-        self.pushButton_divide.clicked.connect(lambda: self.write_number(self.pushButton_divide.text()))
-        
-        self.pushButton_equal.clicked.connect(self.show_result)
-        self.pushButton_clear.clicked.connect(self.clear_popup_action)
-    
-    def clear_popup_action(self, button):
-        self.main_text_label.setText("0")
-        self.is_equal = False
-            
-    
 
 if __name__ == "__main__":
     import sys

@@ -2,6 +2,8 @@ import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QDialog, QApplication
 from PyQt5.uic import loadUi
+import sqlite3
+from time import sleep
 
 class Login(QDialog):
     def __init__(self):
@@ -16,7 +18,27 @@ class Login(QDialog):
         """Login to chat client."""
         name = self.lineEdit_name.text()
         password = self.lineEdit_password.text()
-        print(f'Successfully logged in name={name}, password={password}')
+        if len(name) == 0 or len(password) == 0:
+            self.label_error_message.setText('Ошибка. Заполните все поля!')
+        else:
+            # create connection to
+            connect_to_bd = sqlite3.connect('users.db')
+            # create cursor for
+            cur = connect_to_bd.cursor()
+            # select_query from database
+            sqlite_select_query = """SELECT password from users WHERE username = ?"""
+            cur.execute(sqlite_select_query, (name,))
+            try:
+                result_pass = cur.fetchone()[0]
+                if result_pass  == password:
+                    print(f'Successfully logged in name={name}, password={password}')
+                    self.label_error_message.setText(f'Successfully logged in name={name}')
+                    # self.label_error_message.setText('')
+                else:
+                    self.label_error_message.setText('Ошибка. Неверные имя или пароль!')
+            except:
+                self.label_error_message.setText('Ошибка. Неверные имя или пароль!')
+            connect_to_bd.close()
     
     def goto_create_account(self):
         create_acc = CreateAcc()

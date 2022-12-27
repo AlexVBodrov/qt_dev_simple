@@ -3,7 +3,18 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QDialog, QApplication
 from PyQt5.uic import loadUi
 import sqlite3
-from time import sleep
+import sqlalchemy
+from sqlalchemy import  create_engine
+from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.sql import select
+
+# create engine
+engine = create_engine('sqlite:///users.db')
+# create connection to
+engine.connect()
+# create session
+session = Session(bind=engine)
+
 
 class Login(QDialog):
     def __init__(self):
@@ -21,24 +32,32 @@ class Login(QDialog):
         if len(name) == 0 or len(password) == 0:
             self.label_error_message.setText('Ошибка. Заполните все поля!')
         else:
-            # create connection to
-            connect_to_bd = sqlite3.connect('users.db')
-            # create cursor for
-            cur = connect_to_bd.cursor()
-            # select_query from database
-            sqlite_select_query = """SELECT password from users WHERE username = ?"""
-            cur.execute(sqlite_select_query, (name,))
-            try:
-                result_pass = cur.fetchone()[0]
-                if result_pass  == password:
-                    print(f'Successfully logged in name={name}, password={password}')
-                    self.label_error_message.setText(f'Successfully logged in name={name}')
-                    # self.label_error_message.setText('')
-                else:
-                    self.label_error_message.setText('Ошибка. Неверные имя или пароль!')
-            except:
+            self.validate_password(name, password, name_bd='users.db')
+    
+    def validate_password(self, username, password,  name_bd='users.db'):
+        name = username
+        password = password
+        # create connection to
+        connect_to_bd = sqlite3.connect('users.db')
+        # create cursor for
+        cur = connect_to_bd.cursor()
+        # select_query from database
+        sqlite_select_query = """SELECT password from users WHERE user_name = ?"""
+        cur.execute(sqlite_select_query, (name,))
+        try:
+            result_pass = cur.fetchone()[0]
+            if result_pass  == password:
+                print(f'Successfully logged in name={name}, password={password}')
+                self.label_error_message.setText(f'Successfully logged in name={name}')
+                # self.label_error_message.setText('')
+            else:
                 self.label_error_message.setText('Ошибка. Неверные имя или пароль!')
-            connect_to_bd.close()
+        except:
+            self.label_error_message.setText('Ошибка. Неверные имя или пароль!')
+        connect_to_bd.close()
+    
+
+
     
     def goto_create_account(self):
         create_acc = CreateAcc()

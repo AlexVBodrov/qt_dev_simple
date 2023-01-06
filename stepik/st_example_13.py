@@ -1,32 +1,42 @@
-"""
+# body = Body(name, ro, volume)
 
-1) Создаем список с неправильными словами
-2) Создаем строку с файла с текстом
-3) Создаем .lower() версию верхней переменной 
-4) Пробегаемся циклом по списку неправильных слов и заменяем реплейсом s = s_lower.replace(i, '*'*len(i))
-5) Создаем переменную fin = '' куда будем всё добавлять
+class Body():
+	# где name - название тела (строка);
+ 	# ro - плотность тела (число: вещественное или целочисленное);
+  	# volume - объем тела  (число: вещественное или целочисленное).
 
-6) Пробегаемся по длине строки s_lower и сравниваем её с изначальной строкой s. Если s_lower[i] == '*', добавляем звездочку, иначе если s_lower[i] != '*' and s_lower[i] != s[i], добавляем s[i]. В остальных случаяъ - s_lower[i]
-7) Выводим результат
-"""
-name =input()
+	def __init__(self, name, ro, volume) -> None:
+		self.name = name
+		self.ro = ro
+		self.volume = volume
+		self.weight = self.count_weight(ro, volume)
 
-forbidden_words_lst = []
+	def count_weight(self, ro, volume):
+		# Масса тела вычисляется по формуле: m = ro * volume
+		return ro * volume
 
-with open('forbidden_words.txt', 'r', encoding='utf-8') as forbidden_words_file:
-    for w in forbidden_words_file.read().split():
-        forbidden_words_lst.append(w)
+	@classmethod
+	def __verify_data(cls, other):
+		if not isinstance(other, (int, Body)):
+			raise TypeError("Операнд справа должен иметь тип int или Body")
+		
+		return other if isinstance(other, int) else other.weight
 
-with open(name, 'r', encoding='utf-8') as file:
-    text = file.read()
+	def __gt__(self, other):
+		weight_other = self.__verify_data(other)
+		return self.weight > weight_other
 
-import re
-forbidden_words = forbidden_words_lst
-my_string = text
+	def __eq__(self, other):
+		weight_other = self.__verify_data(other)
+		return self.weight == weight_other
 
-def change(forbidden_words,text):
-	out = text
-	for w in forbidden_words:
-		out = re.sub(w,"*"*len(w),out,flags=re.I|re.M)
-	return out
-print(change(forbidden_words,my_string))
+	def __lt__(self, other):
+		weight_other = self.__verify_data(other)
+		return self.weight < weight_other
+
+	"""
+	body1 > body2  # True, если масса тела body1 больше массы тела body2 # __gt__(self, other)*
+	body1 == body2 # True, если масса тела body1 равна массе тела body2 # __eq__(self, other)*
+	body1 < 10     # True, если масса тела body1 меньше 10 # __lt__(self, other)*
+	body2 == 5     # True, если масса тела body2 равна 5 # __eq__(self, other)*
+	"""

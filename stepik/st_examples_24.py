@@ -1,0 +1,32 @@
+import sys
+
+class MailBox:
+    
+    def __init__(self):
+        self.inbox_list = []
+
+    def receive(self):
+        lst_in = list(map(str.strip, sys.stdin.readlines()))
+        for i in lst_in:
+            self.inbox_list.append(MailItem(*i.split(';')))
+        
+        
+class MailItem:
+    def __init__(self, mail_from, title, content):
+        self.mail_from = mail_from
+        self.title = title
+        self.content = content
+        self.is_read = False
+
+    def set_read(self, fl_read):
+        self.is_read = fl_read
+        
+    def __bool__(self):
+        return bool(self.is_read)
+
+mail = MailBox()
+mail.receive()
+for i in mail.inbox_list[::len(mail.inbox_list) - 1]:
+    i.set_read(True)
+    
+inbox_list_filtered = list(filter(bool, mail.inbox_list))

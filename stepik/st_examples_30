@@ -1,0 +1,35 @@
+# an = Animal(name, old)
+
+class Animal:
+    def __init__(self, name, old):
+        # name - название животного (строка); old - возраст животного (целое число)
+        self.name = name
+        self.old = old
+    
+    def get_info(self):
+        info = [value for value in self.__dict__.values()]
+        result = f"{info[0]}: {info[1]}, {info[2]}, {info[3]}"
+        return result
+    
+
+# cat = Cat(name, old, color, weight)
+
+class Cat(Animal):
+    def __init__(self, name, old, color, weight):
+        super().__init__(name, old)
+        self.color = color
+        self.weight = weight
+    
+# dog = Dog(name, old, breed, size)
+
+class Dog(Animal):
+    def __init__(self, name, old, breed, size):
+        super().__init__(name, old)
+        self.breed = breed
+        self.size = size
+    
+    
+cat = Cat('кот', 4, 'black', 2.25)
+dog = Dog('пёс', 4, 'хаски', (2, 3))
+cat.get_info()
+dog.get_info()
